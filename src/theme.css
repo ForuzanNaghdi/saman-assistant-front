@@ -1,0 +1,1364 @@
+/* ==========================================================================
+   "Saman — future of insurance" theme
+   Loaded after styles.css and overrides its dark palette. No layout logic.
+
+   Visual language is lifted from the classic si24.ir identity:
+     canvas   #f9fafb   surfaces #ffffff
+     brand    #264480   accent  #ec3237
+     ink      #111827   hairlines #e5e7eb
+     24px cards, 10px controls, soft 4/2px shadows, IRANYekanX.
+
+   The future comes from restraint, not ornament: a faint blueprint grid,
+   a navy "cover" rail, the AI companion mark, and a single red brand rule.
+   ========================================================================== */
+
+:root {
+  color-scheme: light;
+
+  /* si24.ir palette, sampled live from the classic site */
+  --si24-navy: #264480;
+  --si24-navy-deep: #1b3566;
+  --si24-navy-light: #4a6eb1;
+  --si24-navy-ink: #0f1f3d;
+  --si24-navy-soft: #eef2f9;
+  --si24-red: #ec3237;
+  --si24-red-deep: #c92227;
+  --si24-red-soft: #fef2f2;
+  --si24-canvas: #f9fafb;
+  --si24-surface: #ffffff;
+  --si24-surface-2: #f3f4f6;
+  --si24-line: #e5e7eb;
+  --si24-line-strong: #d1d5db;
+  --si24-ink: #111827;
+  --si24-ink-2: #374151;
+  --si24-muted: #6b7280;
+  --si24-faint: #9ca3af;
+
+  /* existing tokens, re-pointed at the si24 palette */
+  --bg: var(--si24-canvas);
+  --bg-elevated: var(--si24-surface);
+  --bg-panel: var(--si24-surface);
+  --bg-input: var(--si24-surface);
+
+  --border: var(--si24-line);
+  --border-strong: var(--si24-line-strong);
+
+  --text: var(--si24-ink);
+  --text-muted: var(--si24-muted);
+  --text-faint: var(--si24-faint);
+
+  --accent: var(--si24-navy);
+  --accent-strong: var(--si24-navy);
+  --accent-soft: rgba(38, 68, 128, 0.08);
+  --danger: var(--si24-red);
+  --success: #0f9d68;
+
+  --navy: var(--si24-navy);
+  --navy-deep: var(--si24-navy-ink);
+  --navy-elevated: var(--si24-navy-deep);
+  --gold: var(--si24-navy);
+  --cream: var(--si24-canvas);
+
+  --radius: 18px;
+  --sidebar-width: 318px;
+  --font: 'IRANYekanX', 'Vazirmatn', Tahoma, system-ui, -apple-system,
+    'Segoe UI', sans-serif;
+
+  --shadow-card: 0 1px 2px rgba(17, 24, 39, 0.04),
+    0 4px 6px -2px rgba(17, 24, 39, 0.06);
+  --shadow-card-hover: 0 2px 4px rgba(17, 24, 39, 0.05),
+    0 14px 28px -12px rgba(17, 24, 39, 0.18);
+  --shadow-composer: 0 2px 6px rgba(17, 24, 39, 0.04),
+    0 18px 40px -22px rgba(17, 24, 39, 0.3);
+}
+
+html,
+body {
+  background: var(--si24-canvas);
+}
+
+body {
+  background: var(--si24-canvas);
+  color: var(--si24-ink);
+}
+
+::selection {
+  background: rgba(38, 68, 128, 0.16);
+}
+
+:focus-visible {
+  outline: 2px solid rgba(38, 68, 128, 0.45);
+  outline-offset: 2px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(38, 68, 128, 0.18);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(38, 68, 128, 0.3);
+}
+
+/* ---------------------------------------------------------------- top rule */
+
+.app {
+  position: relative;
+  background: var(--si24-canvas);
+}
+
+.app::before {
+  content: '';
+  position: fixed;
+  inset-block-start: 0;
+  inset-inline: 0;
+  z-index: 60;
+  height: 3px;
+  background: linear-gradient(90deg, var(--si24-navy), var(--si24-red));
+  pointer-events: none;
+}
+
+/* ---------------------------------------------------------------- sidebar */
+
+.sidebar {
+  width: var(--sidebar-width);
+  flex: 0 0 var(--sidebar-width);
+  gap: 18px;
+  padding: 24px 18px 18px;
+  color: #eaf0fb;
+  background:
+    repeating-linear-gradient(
+      to right,
+      rgba(255, 255, 255, 0.028) 0 1px,
+      transparent 1px 46px
+    ),
+    repeating-linear-gradient(
+      to bottom,
+      rgba(255, 255, 255, 0.028) 0 1px,
+      transparent 1px 46px
+    ),
+    radial-gradient(480px 240px at 82% -8%, rgba(236, 50, 55, 0.14), transparent 62%),
+    radial-gradient(620px 360px at 12% 6%, rgba(93, 129, 196, 0.24), transparent 62%),
+    linear-gradient(180deg, #1e3a70 0%, #172c58 52%, #112345 100%);
+  border: 0;
+  box-shadow: -18px 0 44px rgba(15, 31, 61, 0.14);
+}
+
+.brand {
+  gap: 11px;
+}
+
+.brand-mark {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  background: linear-gradient(180deg, #ffffff, #e9eefa);
+  color: var(--si24-navy);
+  font-size: 19px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  box-shadow:
+    0 10px 22px rgba(4, 12, 30, 0.32),
+    inset 0 0 0 1px rgba(38, 68, 128, 0.12);
+}
+
+.brand-text strong {
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.brand-text small {
+  color: rgba(255, 255, 255, 0.56);
+  font-size: 11px;
+}
+
+.new-chat {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 12px 16px;
+  border: 0;
+  border-radius: 12px;
+  background: #ffffff;
+  color: var(--si24-navy);
+  font-size: 13px;
+  font-weight: 700;
+  box-shadow: 0 10px 24px rgba(4, 12, 30, 0.26);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+
+.new-chat::before {
+  content: '+';
+  display: grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--si24-navy-soft);
+  color: var(--si24-navy);
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.new-chat:hover {
+  background: #f4f7fd;
+  color: var(--si24-navy);
+  transform: translateY(-1px);
+  box-shadow: 0 14px 28px rgba(4, 12, 30, 0.3);
+}
+
+.sidebar-section {
+  gap: 9px;
+}
+
+.sidebar-section h2 {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: rgba(255, 255, 255, 0.46);
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.sidebar-section h2::before {
+  content: '';
+  width: 14px;
+  height: 1px;
+  flex: 0 0 auto;
+  background: rgba(255, 255, 255, 0.28);
+}
+
+.sidebar-empty {
+  color: rgba(255, 255, 255, 0.44);
+  font-size: 12px;
+}
+
+.session-list {
+  gap: 7px;
+}
+
+.session-item {
+  padding: 11px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-inline-start: 2px solid transparent;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.035);
+  color: #e7edf8;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.session-item:hover {
+  background: rgba(255, 255, 255, 0.075);
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+.session-item.active {
+  background: rgba(255, 255, 255, 0.11);
+  border-color: rgba(255, 255, 255, 0.16);
+  border-inline-start-color: var(--si24-red);
+}
+
+.session-title-text {
+  color: #ffffff;
+  font-size: 12.5px;
+  font-weight: 600;
+}
+
+.session-meta {
+  color: rgba(255, 255, 255, 0.48);
+  font-size: 10.5px;
+}
+
+.live-dot {
+  background: var(--si24-red);
+  box-shadow: 0 0 0 3px rgba(236, 50, 55, 0.2);
+}
+
+/* ---------------------------------------------------------------- identity */
+
+.sidebar-footer {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.sidebar-footer .service {
+  margin-top: 0;
+}
+
+.identity-label {
+  color: rgba(255, 255, 255, 0.56);
+  font-size: 10.5px;
+}
+
+.identity-input {
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 10px;
+  background: rgba(8, 20, 43, 0.55);
+  color: #eef3fc;
+  font-size: 12px;
+}
+
+.identity-input:focus {
+  outline: none;
+  border-color: rgba(255, 255, 255, 0.42);
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.1);
+}
+
+.identity-input:-webkit-autofill,
+.identity-input:-webkit-autofill:hover,
+.identity-input:-webkit-autofill:focus {
+  -webkit-text-fill-color: #eef3fc;
+  caret-color: #eef3fc;
+  -webkit-box-shadow: 0 0 0 1000px #0c1a34 inset;
+}
+
+.identity-save {
+  border: 0;
+  border-radius: 10px;
+  background: #ffffff;
+  color: var(--si24-navy);
+  font-size: 11.5px;
+  font-weight: 700;
+}
+
+.identity-save:disabled {
+  opacity: 0.35;
+}
+
+.identity-hint {
+  color: rgba(255, 255, 255, 0.46);
+  font-size: 10.5px;
+}
+
+.identity-hint.invalid {
+  color: #ffb0b2;
+}
+
+/* ----------------------------------------------------------------- service */
+
+.service {
+  margin-top: auto;
+  padding: 12px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 12px;
+  background: rgba(4, 12, 30, 0.28);
+  color: rgba(255, 255, 255, 0.82);
+  font-size: 11.5px;
+}
+
+.service-ready .service-dot {
+  background: #37d69a;
+  box-shadow: 0 0 0 3px rgba(55, 214, 154, 0.18);
+}
+
+.service-not_ready .service-dot {
+  background: #f0b429;
+  box-shadow: 0 0 0 3px rgba(240, 180, 41, 0.18);
+}
+
+.service-unreachable .service-dot {
+  background: #ff6b6b;
+  box-shadow: 0 0 0 3px rgba(255, 107, 107, 0.18);
+}
+
+.service-checking .service-dot {
+  background: #93a4c8;
+}
+
+/* -------------------------------------------------------------------- chat */
+
+.chat {
+  position: relative;
+  background:
+    radial-gradient(1100px 520px at 78% -18%, rgba(38, 68, 128, 0.1), transparent 62%),
+    radial-gradient(760px 420px at 6% 112%, rgba(236, 50, 55, 0.05), transparent 60%),
+    radial-gradient(920px 620px at 50% 38%, rgba(249, 250, 251, 0.92), rgba(249, 250, 251, 0) 72%),
+    repeating-linear-gradient(
+      to right,
+      rgba(38, 68, 128, 0.038) 0 1px,
+      transparent 1px 56px
+    ),
+    repeating-linear-gradient(
+      to bottom,
+      rgba(38, 68, 128, 0.038) 0 1px,
+      transparent 1px 56px
+    ),
+    linear-gradient(180deg, #fdfdff 0%, var(--si24-canvas) 42%);
+}
+
+.chat-header {
+  gap: 14px;
+  padding: 18px 34px 13px;
+  border-bottom: 1px solid var(--si24-line);
+  background: rgba(255, 255, 255, 0.86);
+  backdrop-filter: saturate(140%) blur(10px);
+  -webkit-backdrop-filter: saturate(140%) blur(10px);
+}
+
+.chat-identity {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.chat-avatar {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 24%, #ffffff, #eef2f9 66%);
+  border: 1px solid var(--si24-line);
+  box-shadow:
+    var(--shadow-card),
+    inset 0 0 0 3px rgba(255, 255, 255, 0.7);
+}
+
+.chat-avatar .companion--compact {
+  transform: scale(1.08);
+}
+
+.chat-heading {
+  gap: 4px;
+}
+
+.chat-heading h1 {
+  color: var(--si24-ink);
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.chat-stats {
+  gap: 14px;
+}
+
+.stat {
+  color: var(--si24-faint);
+  font-size: 10.5px;
+}
+
+.stat strong {
+  color: var(--si24-navy);
+  font-size: 11.5px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.danger-button {
+  padding: 7px 12px;
+  border: 1px solid rgba(236, 50, 55, 0.24);
+  border-radius: 10px;
+  background: #ffffff;
+  color: var(--si24-red-deep);
+  font-size: 11px;
+  font-weight: 600;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.danger-button:hover {
+  background: var(--si24-red-soft);
+  border-color: rgba(236, 50, 55, 0.4);
+  color: var(--si24-red-deep);
+}
+
+/* ------------------------------------------------------------------ banner */
+
+.banner {
+  margin: 12px 34px 0;
+  padding: 11px 14px;
+  border: 1px solid #fbd5d5;
+  border-inline-start: 3px solid var(--si24-red);
+  border-radius: 12px;
+  background: var(--si24-red-soft);
+  color: #b42318;
+  font-size: 12px;
+  box-shadow: var(--shadow-card);
+}
+
+.banner-text {
+  line-height: 1.7;
+}
+
+.banner-close {
+  color: #b42318;
+  font-size: 16px;
+}
+
+/* ---------------------------------------------------------------- messages */
+
+.message-scroll {
+  padding: 20px 34px 10px;
+}
+
+.turn {
+  max-width: 820px;
+  gap: 10px;
+}
+
+.bubble {
+  border-radius: 18px;
+  font-size: 13.5px;
+  line-height: 1.95;
+}
+
+.bubble-user {
+  max-width: 82%;
+  border: 0;
+  background: linear-gradient(140deg, #2e5299 0%, var(--si24-navy) 56%, #1d3566 100%);
+  color: #ffffff;
+  border-end-end-radius: 6px;
+  box-shadow: 0 10px 22px -14px rgba(38, 68, 128, 0.75);
+}
+
+.bubble-user p {
+  margin: 0;
+}
+
+.bubble-bot {
+  position: relative;
+  padding: 14px 18px 16px;
+  border: 1px solid var(--si24-line);
+  background: var(--si24-surface);
+  color: var(--si24-ink);
+  border-start-end-radius: 6px;
+  box-shadow: var(--shadow-card);
+}
+
+.muted {
+  color: var(--si24-faint);
+}
+
+.waiting span {
+  background: var(--si24-navy);
+}
+
+.cursor {
+  background: var(--si24-navy);
+}
+
+.turn-note {
+  border: 1px solid #fbd5d5;
+  border-radius: 10px;
+  background: var(--si24-red-soft);
+  color: #b42318;
+}
+
+.turn-note code {
+  color: #912018;
+}
+
+.sources {
+  border-top: 1px solid var(--si24-line);
+}
+
+.sources summary {
+  color: var(--si24-navy);
+  font-weight: 600;
+}
+
+.sources summary:hover {
+  color: var(--si24-navy-deep);
+}
+
+.sources li {
+  border: 1px solid var(--si24-line);
+  border-radius: 10px;
+  background: var(--si24-canvas);
+}
+
+.source-title {
+  color: var(--si24-ink-2);
+}
+
+.source-text {
+  color: var(--si24-muted);
+}
+
+/* ---------------------------------------------------------------- markdown */
+
+.markdown h1,
+.markdown h2,
+.markdown h3,
+.markdown h4 {
+  color: var(--si24-navy-ink);
+}
+
+.markdown a {
+  color: var(--si24-navy);
+  text-decoration-color: rgba(38, 68, 128, 0.35);
+}
+
+.markdown code {
+  background: var(--si24-navy-soft);
+  color: #1d3f7a;
+}
+
+.markdown pre {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: var(--si24-navy-ink);
+  color: #e8eefb;
+}
+
+.markdown blockquote {
+  border-inline-start: 3px solid rgba(236, 50, 55, 0.45);
+  color: var(--si24-muted);
+}
+
+.markdown hr {
+  border-top: 1px solid var(--si24-line);
+}
+
+.markdown th {
+  background: var(--si24-navy-soft);
+  color: var(--si24-navy-ink);
+}
+
+.markdown th,
+.markdown td {
+  border-color: var(--si24-line);
+}
+
+/* ------------------------------------------------------------------ hero */
+
+.hero {
+  position: relative;
+  isolation: isolate;
+  width: 100%;
+  max-width: 780px;
+  margin: auto;
+  padding: 3.4vh 8px 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 10px;
+}
+
+/* A single halo ring, concentric with the 156px mark. */
+.hero::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  inset-block-start: calc(3.4vh - 54px);
+  inset-inline-start: 50%;
+  width: 264px;
+  height: 264px;
+  translate: 50% 0;
+  border-radius: 50%;
+  border: 1px dashed rgba(38, 68, 128, 0.16);
+  background: radial-gradient(
+    circle,
+    rgba(38, 68, 128, 0.07) 0%,
+    rgba(38, 68, 128, 0) 62%
+  );
+  pointer-events: none;
+  animation: orbit-turn 60s linear infinite;
+}
+
+.hero-companion {
+  position: relative;
+  z-index: 1;
+  margin-bottom: 2px;
+  filter: drop-shadow(0 18px 26px rgba(38, 68, 128, 0.22));
+  animation: hero-float 6s ease-in-out infinite;
+}
+
+/* ------------------------------------------------------- نشان همراه، زنده */
+
+/* روبان با یک کشیده‌شدن آرام متولد می‌شود. */
+.companion-ribbon {
+  stroke-dasharray: 100;
+  stroke-dashoffset: 100;
+  animation: companion-draw 1.4s cubic-bezier(0.65, 0.05, 0.36, 1) 0.15s
+    forwards;
+}
+
+/* ستارهٔ دنباله‌دار: در ۴٫۲ ثانیه از ابتدای روبان تا گرهٔ سرخ می‌دود و
+   تا شروع دور بعد نامرئی می‌ماند. الگوی ۱۸/۱۸۲ (دورهٔ ۲۰۰ = ۲× طول مسیر)
+   تضمین می‌کند هرگز بیش از یک قطعه روی مسیر نباشد، پس حلقه بی‌درز است و
+   ورود/خروج فقط هندسی است، نه محوشدنی. */
+.companion-pulse {
+  stroke-dasharray: 18 182;
+  stroke-dashoffset: 22;
+  animation: companion-comet 4.2s cubic-bezier(0.42, 0, 0.58, 1) 1.7s
+    infinite;
+}
+
+/* هالهٔ سرخ فقط در لحظهٔ رسیدن سر ستارهٔ دنباله‌دار به گره شکوفا می‌شود. */
+.companion-halo {
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: companion-react-halo 4.2s cubic-bezier(0.42, 0, 0.58, 1) 1.7s
+    infinite;
+}
+
+/* گرهٔ برند: تا رسیدن ستاره خاموش است، در ۵۳٪ روشن می‌شود،
+   در ۵۶٪ به اوج می‌رسد و تا پایان دور آرام محو می‌گردد. */
+.companion-node {
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: companion-react-core 4.2s cubic-bezier(0.42, 0, 0.58, 1) 1.7s
+    infinite;
+}
+
+.companion-orbit {
+  opacity: 0.22;
+  animation: companion-orbit-in 1.1s ease 0.15s backwards;
+}
+
+/* آواتار کوچک هدر باید بی‌حرکت و خوانا بماند. */
+.companion--compact .companion-ribbon {
+  animation: none;
+  stroke-dasharray: none;
+  stroke-dashoffset: 0;
+}
+
+.companion--compact .companion-node {
+  opacity: 1;
+  animation: none;
+}
+
+/* ---------------- پاسخ‌دهی: سه نقطهٔ سفید تا گرهٔ سرخ ---------------- */
+
+/* روبان در این حالت از قبل کشیده شده و گره روشن است. */
+.companion--thinking .companion-ribbon {
+  animation: none;
+  stroke-dasharray: none;
+  stroke-dashoffset: 0;
+}
+
+.companion--thinking .companion-node {
+  opacity: 1;
+  animation: none;
+}
+
+/* هر نقطه روی همان مسیر S سوار است و به سمت گرهٔ سرخ می‌رود. */
+.companion-dot {
+  offset-path: path('M40 100 C95 95 85 65 60 60 C35 55 25 25 80 20');
+  offset-rotate: 0deg;
+  offset-distance: 0%;
+  opacity: 0;
+  animation: companion-hit 2.4s linear infinite;
+}
+
+.companion-dot:nth-child(2) {
+  animation-delay: -0.8s;
+}
+
+.companion-dot:nth-child(3) {
+  animation-delay: -1.6s;
+}
+
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 12px;
+  border: 1px solid var(--si24-line);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.9);
+  color: var(--si24-navy);
+  font-size: 11px;
+  font-weight: 600;
+  box-shadow: var(--shadow-card);
+}
+
+.hero-badge::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--si24-red);
+  box-shadow: 0 0 0 3px rgba(236, 50, 55, 0.12);
+}
+
+.hero h2 {
+  margin: 2px 0 0;
+  max-width: 620px;
+  color: var(--si24-navy-light);
+  font-size: clamp(22px, 2.5vw, 30px);
+  font-weight: 800;
+  line-height: 1.65;
+  letter-spacing: -0.01em;
+}
+
+.hero h2 strong {
+  color: var(--si24-navy);
+  font-weight: 800;
+}
+
+.hero p {
+  margin: 0;
+  max-width: 520px;
+  color: var(--si24-muted);
+  font-size: 12.5px;
+  line-height: 1.9;
+}
+
+.hero-cards {
+  width: 100%;
+  max-width: 660px;
+  margin-top: 18px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.hero-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 15px;
+  border: 1px solid var(--si24-line);
+  border-radius: 18px;
+  background: var(--si24-surface);
+  text-align: start;
+  cursor: pointer;
+  box-shadow: var(--shadow-card);
+  transition: transform 0.16s ease, box-shadow 0.16s ease, border-color 0.16s ease;
+}
+
+.hero-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(38, 68, 128, 0.32);
+  box-shadow: var(--shadow-card-hover);
+}
+
+.hero-card-icon {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  flex: 0 0 auto;
+  border-radius: 13px;
+  background: var(--si24-navy-soft);
+  color: var(--si24-navy);
+  transition: background 0.16s ease, color 0.16s ease;
+}
+
+.hero-card:hover .hero-card-icon {
+  background: var(--si24-navy);
+  color: #ffffff;
+}
+
+.hero-card-icon svg {
+  width: 20px;
+  height: 20px;
+}
+
+.hero-card-text {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.hero-card-title {
+  color: var(--si24-ink);
+  font-size: 12.5px;
+  font-weight: 700;
+}
+
+.hero-card-desc {
+  color: var(--si24-muted);
+  font-size: 10.5px;
+}
+
+/* ---------------------------------------------------------------- composer */
+
+.composer {
+  display: block;
+  padding: 10px 34px 16px;
+  border-top: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(249, 250, 251, 0) 0%,
+    rgba(249, 250, 251, 0.94) 42%,
+    var(--si24-canvas) 100%
+  );
+}
+
+.composer-bar {
+  display: flex;
+  align-items: flex-end;
+  gap: 9px;
+  max-width: 820px;
+  margin-inline: auto;
+  padding: 6px;
+  border: 1px solid var(--si24-line);
+  border-radius: 999px;
+  background: var(--si24-surface);
+  box-shadow: var(--shadow-composer);
+  transition: border-color 0.16s ease, box-shadow 0.16s ease;
+}
+
+.composer-bar:focus-within {
+  border-color: rgba(38, 68, 128, 0.36);
+  box-shadow:
+    0 0 0 4px rgba(38, 68, 128, 0.1),
+    var(--shadow-composer);
+}
+
+.composer-input {
+  flex: 1;
+  min-height: 44px;
+  max-height: 160px;
+  padding: 10px 16px 10px 8px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--si24-ink);
+  font-size: 13px;
+  line-height: 1.8;
+}
+
+.composer-input::placeholder {
+  color: var(--si24-faint);
+}
+
+.composer-input:focus {
+  outline: none;
+  border: 0;
+  box-shadow: none;
+}
+
+.composer-input:disabled {
+  opacity: 0.6;
+}
+
+.composer-send {
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: var(--si24-navy);
+  color: #ffffff;
+  box-shadow: 0 10px 20px -10px rgba(38, 68, 128, 0.8);
+  transition: background 0.15s ease, transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.composer-send:hover:not(:disabled) {
+  background: var(--si24-navy-deep);
+  transform: translateY(-1px);
+  box-shadow: 0 14px 24px -12px rgba(38, 68, 128, 0.9);
+}
+
+.composer-send:disabled {
+  background: #e8edf6;
+  color: var(--si24-navy);
+  box-shadow: none;
+  opacity: 1;
+}
+
+.composer-send svg {
+  width: 18px;
+  height: 18px;
+}
+
+.composer-spinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  border-top-color: #ffffff;
+  border-radius: 50%;
+  animation: composer-spin 0.8s linear infinite;
+}
+
+.composer-hint {
+  margin: 8px 0 0;
+  text-align: center;
+  color: var(--si24-faint);
+  font-size: 10.5px;
+}
+
+/* ----------------------------------------------------------------- loading */
+
+.loading-row {
+  color: var(--si24-muted);
+}
+
+/* نشان متحرک انتظار پاسخ؛ متن «در حال دریافت پاسخ…» کنار آن می‌ماند. */
+.waiting-mark {
+  display: inline-flex;
+  flex: 0 0 auto;
+}
+
+.waiting-row .companion {
+  display: block;
+}
+
+.spinner {
+  border-color: rgba(38, 68, 128, 0.14);
+  border-top-color: var(--si24-navy);
+}
+
+/* ------------------------------------------------------------------- toast */
+
+.toast {
+  border: 1px solid var(--si24-line);
+  border-radius: 999px;
+  background: var(--si24-surface);
+  color: var(--si24-navy);
+  font-weight: 600;
+  box-shadow: 0 16px 40px -18px rgba(17, 24, 39, 0.45);
+}
+
+/* ---------------------------------------------------------------- motion */
+
+@keyframes composer-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes hero-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+@keyframes orbit-turn {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes companion-draw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* یک پاس کامل ستارهٔ دنباله‌دار در هر دور. آفست از ۲۲ تا منفی ۱۰۴ می‌رود،
+   یعنی قطعه از قبل از شروع مسیر تا بعد از پایان آن (حاشیهٔ ۴ واحدی، سرهای
+   گرد بیرون مسیر را می‌پوشاند) و سپس تا شروع دور بعد در همان‌جا می‌ماند. */
+@keyframes companion-comet {
+  0% {
+    stroke-dashoffset: 22;
+  }
+  75%,
+  100% {
+    stroke-dashoffset: -104;
+  }
+}
+
+/* گره تا ۵۰٪ خاموش است؛ سر ستاره در ۵۳٪ به پایان مسیر می‌رسد، در ۵۶٪
+   کاملاً روی گره است (اوج)، بعد تا ۱۰۰٪ محو می‌شود. هر سه انیمیشن همان
+   حلقهٔ ۴٫۲ ثانیه‌ای و همان easing را دارند تا فازشان قفل بماند. */
+@keyframes companion-react-halo {
+  0%,
+  50% {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  53% {
+    opacity: 0.55;
+    transform: scale(1);
+  }
+  56% {
+    opacity: 0.95;
+    transform: scale(1.65);
+  }
+  68% {
+    opacity: 0.55;
+    transform: scale(1.25);
+  }
+  85% {
+    opacity: 0.1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+}
+
+@keyframes companion-react-core {
+  0%,
+  50% {
+    opacity: 0;
+    transform: scale(0.7);
+  }
+  53% {
+    opacity: 0.7;
+    transform: scale(1);
+  }
+  56% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+  68% {
+    opacity: 0.7;
+    transform: scale(1.1);
+  }
+  85% {
+    opacity: 0.12;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.7);
+  }
+}
+
+@keyframes companion-orbit-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes companion-hit {
+  0% {
+    offset-distance: 0%;
+    opacity: 0;
+  }
+  8% {
+    opacity: 1;
+  }
+  96% {
+    opacity: 1;
+  }
+  100% {
+    offset-distance: 100%;
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-companion,
+  .hero::before {
+    animation: none;
+  }
+
+  .companion-ribbon {
+    animation: none;
+    stroke-dasharray: none;
+    stroke-dashoffset: 0;
+  }
+
+  .companion-node {
+    opacity: 1;
+    animation: none;
+  }
+
+  .companion-pulse,
+  .companion-halo {
+    display: none;
+  }
+
+  .companion-orbit {
+    opacity: 0.22;
+    animation: none;
+  }
+
+  .companion--thinking .companion-dot {
+    opacity: 0;
+    animation: none;
+  }
+}
+
+/* --------------------------------------------------------------- responsive */
+
+@media (max-width: 900px) {
+  .chat-header {
+    padding-inline: 20px;
+  }
+
+  .banner {
+    margin-inline: 20px;
+  }
+
+  .message-scroll {
+    padding-inline: 20px;
+  }
+
+  .composer {
+    padding-inline: 20px;
+  }
+}
+
+@media (max-width: 640px) {
+  .hero-cards {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .hero {
+    padding-top: 2vh;
+  }
+
+  .hero::before {
+    inset-block-start: calc(2vh - 54px);
+  }
+
+  .chat-stats {
+    display: none;
+  }
+}
+
+/* --------------------------------------------------- mobile sidebar drawer */
+
+.chat-header-start {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.sidebar-toggle {
+  display: none;
+  align-items: center;
+  flex: 0 0 auto;
+  gap: 6px;
+  white-space: nowrap;
+  padding: 7px 10px;
+  border: 1px solid var(--si24-line);
+  border-radius: 10px;
+  background: var(--si24-surface);
+  color: var(--si24-navy);
+  font-size: 11.5px;
+  font-weight: 600;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.sidebar-toggle:hover {
+  background: var(--si24-navy-soft);
+  border-color: var(--si24-line-strong);
+}
+
+.sidebar-toggle svg {
+  width: 16px;
+  height: 16px;
+}
+
+.sidebar-close {
+  display: none;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  margin-inline-start: auto;
+  flex: 0 0 auto;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+  transition: background 0.15s ease;
+}
+
+.sidebar-close:hover {
+  background: rgba(255, 255, 255, 0.16);
+}
+
+.sidebar-close svg {
+  width: 16px;
+  height: 16px;
+}
+
+.sidebar-backdrop {
+  display: none;
+}
+
+@media (max-width: 860px) {
+  .sidebar-toggle {
+    display: inline-flex;
+  }
+
+  .sidebar {
+    position: fixed;
+    inset: 0;
+    z-index: 70;
+    width: 100%;
+    max-height: none;
+    height: 100dvh;
+    padding: 18px 16px calc(26px + env(safe-area-inset-bottom));
+    border: 0;
+    box-shadow: 0 24px 80px rgba(9, 20, 44, 0.32);
+    overscroll-behavior: contain;
+    transform: translateX(-100%);
+    visibility: hidden;
+    transition:
+      transform 0.3s cubic-bezier(0.22, 0.61, 0.36, 1),
+      visibility 0.3s;
+  }
+
+  [dir='rtl'] .sidebar {
+    transform: translateX(100%);
+  }
+
+  .app.sidebar-open .sidebar {
+    transform: translateX(0);
+    visibility: visible;
+  }
+
+  .sidebar-close {
+    display: grid;
+  }
+
+  .sidebar-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 65;
+    padding: 0;
+    border: 0;
+    background: rgba(15, 31, 61, 0.38);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.3s ease, visibility 0.3s;
+  }
+
+  .app.sidebar-open .sidebar-backdrop {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+  }
+
+  .session-list {
+    max-height: none;
+  }
+
+  .chat-header {
+    gap: 10px;
+  }
+
+  .chat-header-start {
+    gap: 9px;
+  }
+}
+
+@media (max-width: 480px) {
+  .sidebar-toggle span {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sidebar,
+  .sidebar-backdrop {
+    transition: none;
+  }
+}

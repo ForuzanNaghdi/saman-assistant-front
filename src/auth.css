@@ -1,0 +1,608 @@
+/* ==========================================================================
+   صفحهٔ ورود
+   بعد از theme.css بارگذاری می‌شود و از توکن‌های si24 استفاده می‌کند.
+
+   چیدمان: یک «جلد» سرمه‌ای در ابتدای خط (راست در RTL) با نشان همراه، و یک
+   کارت ورود سفید روی بوم روشن. هیچ منطق چیدمانی وارد پوستهٔ گفتگو نمی‌شود.
+   ========================================================================== */
+
+.auth {
+  position: relative;
+  min-height: 100dvh;
+  display: grid;
+  grid-template-columns: minmax(0, 1.06fr) minmax(0, 1fr);
+  background: var(--si24-canvas);
+  color: var(--si24-ink);
+  font-family: var(--font);
+}
+
+/* همان نوار سه‌پیکسلی برند که پوستهٔ گفتگو دارد */
+.auth::before {
+  content: '';
+  position: fixed;
+  inset-block-start: 0;
+  inset-inline: 0;
+  z-index: 60;
+  height: 3px;
+  background: linear-gradient(90deg, var(--si24-navy), var(--si24-red));
+  pointer-events: none;
+}
+
+/* ------------------------------------------------------------------ جلد */
+
+.auth-cover {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(20px, 3vw, 34px);
+  padding: clamp(28px, 3.6vw, 52px);
+  color: #eaf0fb;
+  background:
+    radial-gradient(620px 340px at 84% -10%, rgba(236, 50, 55, 0.16), transparent 62%),
+    radial-gradient(760px 520px at 8% 4%, rgba(93, 129, 196, 0.28), transparent 64%),
+    linear-gradient(180deg, #1e3a70 0%, #172c58 52%, #112345 100%);
+}
+
+/* شبکهٔ نقشه؛ به سمت مرکز محو می‌شود تا تیتر خوانا بماند */
+.auth-cover::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    repeating-linear-gradient(
+      to right,
+      rgba(255, 255, 255, 0.05) 0 1px,
+      transparent 1px 52px
+    ),
+    repeating-linear-gradient(
+      to bottom,
+      rgba(255, 255, 255, 0.05) 0 1px,
+      transparent 1px 52px
+    );
+  -webkit-mask-image: radial-gradient(125% 95% at 50% 38%, #000 28%, transparent 76%);
+  mask-image: radial-gradient(125% 95% at 50% 38%, #000 28%, transparent 76%);
+  pointer-events: none;
+}
+
+.auth-brand {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+}
+
+.auth-brand-mark {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  flex: 0 0 auto;
+  border-radius: 12px;
+  background: linear-gradient(180deg, #ffffff, #e9eefa);
+  color: var(--si24-navy);
+  font-size: 18px;
+  font-weight: 800;
+  box-shadow:
+    0 10px 22px rgba(4, 12, 30, 0.32),
+    inset 0 0 0 1px rgba(38, 68, 128, 0.12);
+}
+
+.auth-brand-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.auth-brand-text strong {
+  color: #ffffff;
+  font-size: 14.5px;
+  font-weight: 700;
+}
+
+.auth-brand-text small {
+  color: rgba(255, 255, 255, 0.56);
+  font-size: 11px;
+}
+
+/* ------------------------------------------------------------------ قهرمان */
+
+.auth-hero {
+  margin-block: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 13px;
+  padding-block: 8px;
+}
+
+.auth-mark {
+  position: relative;
+  display: grid;
+  place-items: center;
+  margin-bottom: 2px;
+  filter: drop-shadow(0 18px 26px rgba(4, 12, 30, 0.4));
+  animation: auth-float 6s ease-in-out infinite;
+}
+
+/* یک حاشیهٔ مداری نازک، هم‌مرکز با نشان */
+.auth-mark::before {
+  content: '';
+  position: absolute;
+  inset: -40px;
+  z-index: -1;
+  border-radius: 50%;
+  border: 1px dashed rgba(255, 255, 255, 0.2);
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.09) 0%,
+    rgba(255, 255, 255, 0) 62%
+  );
+  animation: auth-spin 70s linear infinite;
+  pointer-events: none;
+}
+
+.auth-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #eef3fc;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.auth-badge::before {
+  content: '';
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--si24-red);
+  box-shadow: 0 0 0 3px rgba(236, 50, 55, 0.24);
+}
+
+.auth-headline {
+  margin: 2px 0 0;
+  max-width: 470px;
+  color: #ffffff;
+  font-size: clamp(24px, 2.6vw, 33px);
+  font-weight: 800;
+  line-height: 1.6;
+  text-wrap: balance;
+}
+
+.auth-headline strong {
+  color: #ff9fa2;
+  font-weight: 800;
+}
+
+.auth-sub {
+  margin: 0;
+  max-width: 430px;
+  color: rgba(234, 240, 251, 0.72);
+  font-size: 13px;
+  line-height: 1.95;
+  text-wrap: pretty;
+}
+
+.auth-features {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  width: 100%;
+  max-width: 420px;
+  margin: 8px auto 0;
+  padding: 0;
+  list-style: none;
+  text-align: start;
+}
+
+.auth-feature {
+  display: flex;
+  align-items: flex-start;
+  gap: 11px;
+  padding: 11px 13px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 14px;
+  background: rgba(8, 20, 43, 0.32);
+}
+
+.auth-feature-icon {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  flex: 0 0 auto;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.1);
+  color: #dbe6fa;
+}
+
+.auth-feature-icon svg {
+  width: 17px;
+  height: 17px;
+}
+
+.auth-feature-text {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.auth-feature-title {
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.auth-feature-desc {
+  color: rgba(255, 255, 255, 0.56);
+  font-size: 10.5px;
+  line-height: 1.7;
+}
+
+.auth-cover-footer {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  margin-top: auto;
+  color: rgba(255, 255, 255, 0.46);
+  font-size: 10.5px;
+}
+
+.auth-cover-footer::before {
+  content: '';
+  width: 26px;
+  height: 2px;
+  flex: 0 0 auto;
+  border-radius: 2px;
+  background: linear-gradient(90deg, var(--si24-red), rgba(236, 50, 55, 0));
+}
+
+/* ------------------------------------------------------------------ پنل */
+
+.auth-panel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(22px, 3.4vw, 52px);
+  background:
+    radial-gradient(680px 420px at 84% -14%, rgba(38, 68, 128, 0.1), transparent 62%),
+    radial-gradient(520px 380px at 4% 108%, rgba(236, 50, 55, 0.05), transparent 60%),
+    repeating-linear-gradient(
+      to right,
+      rgba(38, 68, 128, 0.035) 0 1px,
+      transparent 1px 56px
+    ),
+    repeating-linear-gradient(
+      to bottom,
+      rgba(38, 68, 128, 0.035) 0 1px,
+      transparent 1px 56px
+    ),
+    var(--si24-canvas);
+}
+
+.auth-card {
+  width: min(416px, 100%);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: clamp(24px, 3vw, 34px);
+  border: 1px solid var(--si24-line);
+  border-radius: 24px;
+  background: var(--si24-surface);
+  box-shadow:
+    0 2px 4px rgba(17, 24, 39, 0.05),
+    0 34px 64px -34px rgba(17, 24, 39, 0.3);
+  animation: auth-rise 0.5s cubic-bezier(0.22, 0.61, 0.36, 1) both;
+}
+
+.auth-card-head {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.auth-rule {
+  width: 46px;
+  height: 3px;
+  border-radius: 3px;
+  background: linear-gradient(90deg, var(--si24-navy), var(--si24-red));
+}
+
+.auth-eyebrow {
+  color: var(--si24-faint);
+  font-size: 10.5px;
+  font-weight: 600;
+}
+
+.auth-card h1 {
+  margin: 0;
+  color: var(--si24-navy-ink);
+  font-size: 23px;
+  font-weight: 800;
+  line-height: 1.55;
+}
+
+.auth-lead {
+  margin: 0;
+  color: var(--si24-muted);
+  font-size: 12.5px;
+  line-height: 1.9;
+  text-wrap: pretty;
+}
+
+.auth-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* دکمهٔ اصلی: همان گرادیان سرمه‌ای حباب کاربر در گفتگو */
+.auth-primary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  width: 100%;
+  min-height: 52px;
+  padding: 0 18px;
+  border: 0;
+  border-radius: 14px;
+  background: linear-gradient(140deg, #2e5299 0%, var(--si24-navy) 56%, #1d3566 100%);
+  color: #ffffff;
+  font-size: 13.5px;
+  font-weight: 700;
+  box-shadow: 0 14px 26px -14px rgba(38, 68, 128, 0.85);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
+}
+
+.auth-primary:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.06);
+  box-shadow: 0 18px 30px -16px rgba(38, 68, 128, 0.95);
+}
+
+.auth-primary:active {
+  transform: translateY(0);
+  filter: brightness(0.98);
+}
+
+.auth-primary svg {
+  width: 18px;
+  height: 18px;
+  flex: 0 0 auto;
+}
+
+.auth-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--si24-faint);
+  font-size: 10.5px;
+}
+
+.auth-divider::before,
+.auth-divider::after {
+  content: '';
+  height: 1px;
+  flex: 1;
+  background: var(--si24-line);
+}
+
+.auth-secondary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  min-height: 48px;
+  padding: 0 16px;
+  border: 1px solid var(--si24-line-strong);
+  border-radius: 14px;
+  background: var(--si24-surface);
+  color: var(--si24-navy);
+  font-size: 12.5px;
+  font-weight: 700;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.auth-secondary:hover {
+  background: var(--si24-navy-soft);
+  border-color: rgba(38, 68, 128, 0.32);
+}
+
+.auth-secondary svg {
+  width: 17px;
+  height: 17px;
+  flex: 0 0 auto;
+}
+
+.auth-hint {
+  margin: -4px 0 0;
+  color: var(--si24-muted);
+  font-size: 10.5px;
+  line-height: 1.8;
+}
+
+/* ناحیهٔ زنده فقط وقتی پیامی دارد فضای کارت را بگیرد */
+.auth-live:empty {
+  display: none;
+}
+
+.auth-notice {
+  display: flex;
+  gap: 9px;
+  padding: 11px 13px;
+  border: 1px solid rgba(38, 68, 128, 0.18);
+  border-inline-start: 3px solid var(--si24-navy);
+  border-radius: 12px;
+  background: var(--si24-navy-soft);
+  color: #24406f;
+  font-size: 11.5px;
+  line-height: 1.8;
+  animation: auth-rise 0.3s ease both;
+}
+
+.auth-notice svg {
+  width: 16px;
+  height: 16px;
+  flex: 0 0 auto;
+  margin-top: 3px;
+}
+
+.auth-legal {
+  margin: 0;
+  color: var(--si24-muted);
+  font-size: 10px;
+  line-height: 1.9;
+  text-wrap: pretty;
+}
+
+.auth-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 8px;
+  padding-top: 14px;
+  border-top: 1px solid var(--si24-line);
+  color: var(--si24-faint);
+  font-size: 10.5px;
+}
+
+.auth-meta svg {
+  width: 14px;
+  height: 14px;
+  flex: 0 0 auto;
+}
+
+.auth-meta .auth-meta-sep {
+  color: var(--si24-line-strong);
+}
+
+/* ----------------------------------------------------------------- حرکت */
+
+@keyframes auth-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+@keyframes auth-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes auth-rise {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* -------------------------------------------------------------- واکنش‌گرا */
+
+@media (max-width: 900px) {
+  .auth {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto minmax(0, 1fr);
+  }
+
+  .auth-cover {
+    gap: 16px;
+    padding: 26px 20px 30px;
+  }
+
+  .auth-hero {
+    padding-block: 0;
+    gap: 10px;
+  }
+
+  .auth-mark .companion {
+    width: 104px;
+    height: 104px;
+  }
+
+  .auth-mark::before {
+    inset: -20px;
+  }
+
+  .auth-headline {
+    max-width: 360px;
+    font-size: 21px;
+  }
+
+  .auth-sub {
+    font-size: 11.5px;
+  }
+
+  .auth-features,
+  .auth-cover-footer {
+    display: none;
+  }
+
+  .auth-panel {
+    align-items: flex-start;
+    padding: 20px 16px 32px;
+  }
+
+  .auth-card {
+    border-radius: 20px;
+  }
+}
+
+@media (max-width: 900px) and (max-height: 760px) {
+  .auth-sub {
+    display: none;
+  }
+
+  .auth-mark .companion {
+    width: 84px;
+    height: 84px;
+  }
+}
+
+@media (max-height: 720px) and (min-width: 901px) {
+  .auth-features {
+    display: none;
+  }
+
+  .auth-cover {
+    gap: 18px;
+  }
+
+  .auth-mark .companion {
+    width: 132px;
+    height: 132px;
+  }
+
+  .auth-headline {
+    font-size: 25px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .auth-mark,
+  .auth-mark::before,
+  .auth-card,
+  .auth-notice {
+    animation: none;
+  }
+}

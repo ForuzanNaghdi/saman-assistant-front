@@ -1,0 +1,137 @@
+# Rendered to /tmp/nginx.conf by docker-entrypoint.sh at container start.
+# Two values are substituted from the container environment:
+#   ${API_UPSTREAM}                  the API origin this edge forwards to
+#   ${SAMAN_IDENTITY_SHARED_SECRET}  the gateway header the API requires
+# The secret may arrive as a pod env, a mounted secret file, or (fallback) the
+# image default from a CI build arg. It never reaches the browser bundle.
+load_module modules/ngx_http_brotli_filter_module.so;
+load_module modules/ngx_http_brotli_static_module.so;
+
+worker_processes 8;
+pid /tmp/nginx.pid; # for non-root user
+
+events {
+    worker_connections 1024;
+}
+
+http {
+    client_body_temp_path /tmp/client_temp;     # for non-root user
+    proxy_temp_path       /tmp/proxy_temp_path; # for non-root user
+    fastcgi_temp_path     /tmp/fastcgi_temp;    # for non-root user
+    uwsgi_temp_path       /tmp/uwsgi_temp;      # for non-root user
+    scgi_temp_path        /tmp/scgi_temp;       # for non-root user
+
+    server_tokens   off;
+    # Static traffic stays quiet; only proxied API calls are logged, so the
+    # pod logs in Argo show the requests that can actually fail.
+    access_log      off;
+    log_format api  '$remote_addr [$time_local] "$request" $status '
+                    'upstream=$upstream_addr upstream_status=$upstream_status '
+                    'time=$request_time';
+
+    server {
+        listen 80;
+        root  /usr/share/nginx/html;
+        include /etc/nginx/mime.types;
+        error_page   500 502 503 504  /50x.html;
+        location = /50x.html {
+            root   /usr/share/nginx/html;
+        }
+
+        # The API installs no CORS middleware, so the browser only ever talks to
+        # this origin. It asks for /api/... (VITE_API_PREFIX in src/api/client.ts)
+        # because the ingress sends bare /chat, /ingestion and /health straight
+        # to the API, where nothing can add the gateway header. ^~ beats the
+        # asset regex below, so no /api/ path is ever served as a file.
+        # The two API locations below carry the same proxy settings: keep them
+        # identical. They are inlined rather than included because the entrypoint
+        # substitutes ${API_UPSTREAM} and ${SAMAN_IDENTITY_SHARED_SECRET} in this
+        # file only, and an unsubstituted include would be a syntax error.
+        location ^~ /api/ {
+            rewrite ^/api(/.*)$ $1 break;
+
+            access_log /dev/stdout api;
+
+            proxy_http_version 1.1;
+            proxy_set_header Host              $proxy_host;
+            proxy_set_header X-Real-IP         $remote_addr;
+            proxy_set_header X-Forwarded-For   $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+            # X-Authenticated-User is forwarded as sent by the browser. The
+            # gateway's shared secret is added here; an empty value makes nginx
+            # drop the header instead of sending it blank.
+            proxy_set_header X-Internal-Auth   "${SAMAN_IDENTITY_SHARED_SECRET}";
+
+            proxy_pass ${API_UPSTREAM};
+
+            # Turns stream over SSE, so nothing may be buffered; the read
+            # timeout is generous because a turn can stay open for minutes.
+            proxy_buffering    off;
+            proxy_cache        off;
+            proxy_connect_timeout 10s;
+            proxy_send_timeout    3600s;
+            proxy_read_timeout    3600s;
+            proxy_ssl_server_name on;
+
+            # Document uploads are capped at 25 MB in the UI.
+            client_max_body_size 32m;
+        }
+
+        # Bare API paths: used by tools and by an ingress that routes them to
+        # this service instead of the API.
+        location ~ ^/(chat|ingestion|health)(/|$) {
+            access_log /dev/stdout api;
+
+            proxy_http_version 1.1;
+            proxy_set_header Host              $proxy_host;
+            proxy_set_header X-Real-IP         $remote_addr;
+            proxy_set_header X-Forwarded-For   $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+            proxy_set_header X-Internal-Auth   "${SAMAN_IDENTITY_SHARED_SECRET}";
+
+            proxy_pass ${API_UPSTREAM};
+
+            proxy_buffering    off;
+            proxy_cache        off;
+            proxy_connect_timeout 10s;
+            proxy_send_timeout    3600s;
+            proxy_read_timeout    3600s;
+            proxy_ssl_server_name on;
+
+            client_max_body_size 32m;
+        }
+
+       # Serve remoteEntry.js without cache
+    location ~* ^/assets/remoteEntry.*\.js$ {
+        add_header Cache-Control "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0" always;
+        add_header Pragma "no-cache" always;
+        add_header Expires "0" always;
+        gzip off;
+        brotli off;
+        try_files $uri =404;
+    }
+
+    # Serve all versioned assets directly
+    location ~* ^/.*\.(js|css|woff2?|eot|ttf|otf)$ {
+        add_header Cache-Control "public, max-age=31536000, immutable" always;
+        try_files $uri =404;
+    }
+
+    location / {
+        gzip on;
+        gzip_vary on;
+        gzip_min_length 10240;
+        gzip_comp_level 6;
+        gzip_proxied expired no-cache no-store private auth;
+        gzip_types text/plain text/css text/xml text/javascript application/x-javascript application/xml application/javascript;
+        gzip_disable "MSIE [1-6]\.";
+
+        brotli on;
+        brotli_comp_level 6;
+        brotli_types text/plain text/css text/xml text/javascript application/x-javascript application/xml application/javascript;
+        brotli_static on;
+
+        try_files $uri /index.html;
+       }
+    }
+}
